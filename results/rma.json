@@ -1,0 +1,166 @@
+{
+ "alternative": "A5",
+ "rbd": {
+  "k = n (no spare block)": {
+   "R_4h": 0.993656,
+   "R_12h": 0.981089,
+   "importance_12h": [
+    [
+     "apu",
+     0.517248
+    ],
+    [
+     "ecu",
+     0.314474
+    ],
+    [
+     "li_block",
+     0.126016
+    ],
+    [
+     "sspc_ch",
+     0.013877
+    ],
+    [
+     "pmc",
+     0.009462
+    ],
+    [
+     "combiner",
+     0.006308
+    ],
+    [
+     "main_contactor",
+     0.006308
+    ],
+    [
+     "monitor",
+     0.003154
+    ],
+    [
+     "busbar",
+     0.003154
+    ]
+   ]
+  },
+  "k = n - 1 (one spare block)": {
+   "R_4h": 0.994451,
+   "R_12h": 0.983444,
+   "importance_12h": [
+    [
+     "apu",
+     0.591735
+    ],
+    [
+     "ecu",
+     0.35976
+    ],
+    [
+     "sspc_ch",
+     0.015875
+    ],
+    [
+     "pmc",
+     0.010824
+    ],
+    [
+     "combiner",
+     0.007216
+    ],
+    [
+     "main_contactor",
+     0.007216
+    ],
+    [
+     "monitor",
+     0.003608
+    ],
+    [
+     "busbar",
+     0.003608
+    ],
+    [
+     "li_block",
+     0.000156
+    ]
+   ]
+  }
+ },
+ "availability": {
+  "mtbf_h": 628.535512,
+  "mcmt_h": 3.120993,
+  "A_i": 0.995059,
+  "mdt_h": 31.120993,
+  "A_o": 0.952822
+ },
+ "rate_sensitivity_R12": {
+  "x0.5": 0.991688,
+  "x1.0": 0.983444,
+  "x3.0": 0.951135
+ },
+ "blocks": [
+  {
+   "id": "li_block",
+   "name": "Li-ion mission bank (k of n blocks)",
+   "fpmh": 20.0,
+   "n": 10,
+   "k": 9
+  },
+  {
+   "id": "combiner",
+   "name": "Combiner relay (VSR)",
+   "fpmh": 10.0,
+   "n": 1,
+   "k": 1
+  },
+  {
+   "id": "main_contactor",
+   "name": "Mission bus main contactor",
+   "fpmh": 10.0,
+   "n": 1,
+   "k": 1
+  },
+  {
+   "id": "monitor",
+   "name": "Battery monitor / shunt",
+   "fpmh": 5.0,
+   "n": 1,
+   "k": 1
+  },
+  {
+   "id": "pmc",
+   "name": "Power-management controller (FB_PowerMgmt host)",
+   "fpmh": 15.0,
+   "n": 1,
+   "k": 1
+  },
+  {
+   "id": "busbar",
+   "name": "Bus bars, harness, connectors",
+   "fpmh": 5.0,
+   "n": 1,
+   "k": 1
+  },
+  {
+   "id": "sspc_ch",
+   "name": "SSPC channels of the essential suite (11)",
+   "fpmh": 2.0,
+   "n": 11,
+   "k": 11
+  },
+  {
+   "id": "ecu",
+   "name": "Environmental control unit",
+   "fpmh": 500.0,
+   "n": 1,
+   "k": 1
+  },
+  {
+   "id": "apu",
+   "name": "5 kW APU",
+   "fpmh": 824.0,
+   "n": 1,
+   "k": 1
+  }
+ ]
+}

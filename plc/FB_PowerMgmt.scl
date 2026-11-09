@@ -1,0 +1,196 @@
+FUNCTION_BLOCK "FB_PowerMgmt"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      CycleMs : DInt := 1000;
+      VBus : Real;
+      SocMB : Real;
+      TBay : Real;
+      PLoadW : Real;
+      ChargeOK : Bool;
+      CbrnAlarm : Bool;
+      AutoStartEn : Bool;
+      SilentReq : Bool;
+      Reset : Bool;
+      SocReserve : Real := 0.1;
+      UsableWh : Real := 2000.0;
+      CbrnCh : Int := 0;
+      Prio : Array[1..16] of Int;
+      ChReq : Array[1..16] of Bool;
+      ChTrip : Array[1..16] of Bool;
+   END_VAR
+   VAR_OUTPUT
+      ChOn : Array[1..16] of Bool;
+      ChResetCmd : Array[1..16] of Bool;
+      ShedLevel : Int;
+      LvdActive : Bool;
+      CombinerCmd : Bool;
+      ApuStartReq : Bool;
+      LowSocWarn : Bool;
+      ReserveAlarm : Bool;
+      BayHot : Bool;
+      HoursLeft : Real;
+      TripLatched : Array[1..16] of Bool;
+   END_VAR
+   VAR
+      i : Int;
+      lvl : Int;
+      socU : Real;
+      target : Int;
+      allowed : Bool;
+      tripAge : Array[1..16] of DInt;
+      retryUsed : Array[1..16] of Bool;
+      tUV : TON_TIME;
+      tShedUp : TON_TIME;
+      tShedDn : TON_TIME;
+      tLvd : TON_TIME;
+      tCombClose : TON_TIME;
+      tCombOpen : TON_TIME;
+      rReset : R_TRIG;
+      uvFired : Bool;
+   END_VAR
+   VAR CONSTANT
+      SOC_L1 : Real := 0.5;
+      SOC_L2 : Real := 0.35;
+      SOC_L3 : Real := 0.22;
+      SOC_HYST : Real := 0.1;
+      V_UV : Real := 23.0;
+      V_LVD : Real := 21.0;
+      V_COMB_CLOSE : Real := 26.4;
+      V_COMB_OPEN : Real := 25.6;
+      T_BAY_HOT : Real := 55.0;
+      T_BAY_OK : Real := 50.0;
+      SOC_APU_STOP : Real := 0.95;
+      RETRY_MS : DInt := 5000;
+   END_VAR
+
+BEGIN
+#rReset(CLK := #Reset);
+
+(* --- combiner (voltage-sensing relay behaviour, only while a source is on line) --- *)
+#tCombClose(IN := #ChargeOK AND #VBus >= #V_COMB_CLOSE, PT := T#5S);
+#tCombOpen(IN := (NOT #ChargeOK) OR #VBus < #V_COMB_OPEN, PT := T#2S);
+IF #tCombClose.Q THEN
+    #CombinerCmd := TRUE;
+ELSIF #tCombOpen.Q THEN
+    #CombinerCmd := FALSE;
+END_IF;
+
+(* --- SOC-driven target level, on the usable band above the reserve --- *)
+#socU := (#SocMB - #SocReserve) / MAX(1.0 - #SocReserve, 0.05);
+IF #socU < #SOC_L3 THEN
+    #target := 3;
+ELSIF #socU < #SOC_L2 THEN
+    #target := 2;
+ELSIF #socU < #SOC_L1 THEN
+    #target := 1;
+ELSE
+    #target := 0;
+END_IF;
+
+(* raise the level after 10 s below a threshold *)
+#tShedUp(IN := #target > #ShedLevel, PT := T#10S);
+IF #tShedUp.Q THEN
+    #ShedLevel := #ShedLevel + 1;
+    #tShedUp(IN := FALSE, PT := T#10S);   (* restart: one level per 10 s *)
+END_IF;
+
+(* restore one level only with a source on line and SOC above threshold + hysteresis *)
+#lvl := 0;
+IF #socU < #SOC_L3 + #SOC_HYST THEN
+    #lvl := 3;
+ELSIF #socU < #SOC_L2 + #SOC_HYST THEN
+    #lvl := 2;
+ELSIF #socU < #SOC_L1 + #SOC_HYST THEN
+    #lvl := 1;
+END_IF;
+#tShedDn(IN := #ChargeOK AND #lvl < #ShedLevel AND NOT #BayHot, PT := T#60S);
+IF #tShedDn.Q THEN
+    #ShedLevel := #ShedLevel - 1;
+    #tShedDn(IN := FALSE, PT := T#60S);
+END_IF;
+
+(* fast under-voltage shed: one level per 5 s of sag, without waiting for the SOC estimate *)
+#tUV(IN := #VBus < #V_UV AND NOT #ChargeOK AND NOT #uvFired, PT := T#5S);
+IF #tUV.Q THEN
+    #ShedLevel := MIN(#ShedLevel + 1, 3);
+    #uvFired := TRUE;
+END_IF;
+IF #VBus >= #V_UV + 0.5 OR #ChargeOK THEN
+    #uvFired := FALSE;
+END_IF;
+
+(* electronics bay over-temperature: drop deferrable loads to cut heat *)
+IF #TBay > #T_BAY_HOT THEN
+    #BayHot := TRUE;
+ELSIF #TBay < #T_BAY_OK THEN
+    #BayHot := FALSE;
+END_IF;
+IF #BayHot AND #ShedLevel < 2 THEN
+    #ShedLevel := 2;
+END_IF;
+
+IF #ShedLevel > 3 THEN
+    #ShedLevel := 3;
+ELSIF #ShedLevel < 0 THEN
+    #ShedLevel := 0;
+END_IF;
+
+(* --- reserve and low-voltage disconnect --- *)
+#ReserveAlarm := #SocMB <= #SocReserve;
+#tLvd(IN := #VBus < #V_LVD AND NOT #ChargeOK, PT := T#10S);
+IF (#ReserveAlarm OR #tLvd.Q) AND NOT #ChargeOK THEN
+    #LvdActive := TRUE;
+END_IF;
+IF #LvdActive AND #ChargeOK AND #SocMB > #SocReserve + 0.05 THEN
+    #LvdActive := FALSE;
+END_IF;
+IF #rReset.Q AND NOT #ReserveAlarm AND #VBus >= #V_LVD THEN
+    #LvdActive := FALSE;
+END_IF;
+#LowSocWarn := #socU < #SOC_L2;
+
+(* --- auxiliary power unit request (hysteresis on SOC) --- *)
+IF #AutoStartEn AND NOT #SilentReq AND (#ShedLevel >= 2 OR #socU < #SOC_L2) THEN
+    #ApuStartReq := TRUE;
+END_IF;
+IF #SilentReq OR NOT #AutoStartEn OR #SocMB >= #SOC_APU_STOP THEN
+    #ApuStartReq := FALSE;
+END_IF;
+
+(* --- time to the reserve at the present load --- *)
+IF #PLoadW > 1.0 THEN
+    #HoursLeft := MAX(#SocMB - #SocReserve, 0.0) * #UsableWh / #PLoadW;
+ELSE
+    #HoursLeft := 99.0;
+END_IF;
+
+(* --- per channel: trip handling and the on command --- *)
+FOR #i := 1 TO 16 DO
+    #ChResetCmd[#i] := FALSE;
+    IF #rReset.Q THEN
+        #TripLatched[#i] := FALSE;
+        #retryUsed[#i] := FALSE;
+    END_IF;
+    IF #ChTrip[#i] AND NOT #TripLatched[#i] THEN
+        #tripAge[#i] := #tripAge[#i] + #CycleMs;
+        IF #Prio[#i] = 1 AND NOT #retryUsed[#i] THEN
+            IF #tripAge[#i] >= #RETRY_MS THEN
+                #ChResetCmd[#i] := TRUE;       (* one automatic retry for vital channels *)
+                #retryUsed[#i] := TRUE;
+                #tripAge[#i] := 0;
+            END_IF;
+        ELSE
+            #TripLatched[#i] := TRUE;          (* second trip, or a non-vital channel: latch *)
+        END_IF;
+    ELSIF NOT #ChTrip[#i] THEN
+        #tripAge[#i] := 0;
+    END_IF;
+
+    #allowed := #Prio[#i] >= 1 AND #Prio[#i] <= 4 - #ShedLevel;
+    IF #CbrnAlarm AND #i = #CbrnCh AND #Prio[#i] >= 1 THEN
+        #allowed := TRUE;
+    END_IF;
+    #ChOn[#i] := #ChReq[#i] AND #allowed AND NOT #LvdActive AND NOT #TripLatched[#i];
+END_FOR;
+END_FUNCTION_BLOCK

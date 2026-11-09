@@ -1,0 +1,76 @@
+FUNCTION_BLOCK "FB_ArcDetect"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      HfNorm : Real;
+      Dips : Int;
+      BurstMs : Real;
+      IMean : Real;
+      Reset : Bool;
+   END_VAR
+   VAR_OUTPUT
+      Trip : Bool;
+      Kind : Int;
+      SerScore : Real;
+      BurstCount : Int;
+   END_VAR
+   VAR
+      evidence : Bool;
+      inBurst : Bool;
+      winMs : DInt;
+   END_VAR
+   VAR CONSTANT
+      I_MIN : Real := 0.5;
+      TH_HF : Real := 0.03;
+      SER_DECAY : Real := 0.97;
+      SER_TRIP : Real := 10.0;
+      BURST_MIN_MS : Real := 0.3;
+      PAR_COUNT : Int := 3;
+      PAR_WIN_MS : DInt := 500;
+   END_VAR
+
+BEGIN
+IF #Reset THEN
+    #Trip := FALSE;
+    #Kind := 0;
+    #SerScore := 0.0;
+    #BurstCount := 0;
+    #winMs := 0;
+END_IF;
+
+(* series arc *)
+#evidence := #IMean > #I_MIN AND #HfNorm > #TH_HF AND #Dips >= 1;
+IF #evidence THEN
+    #SerScore := #SerScore * #SER_DECAY + 1.0;
+ELSE
+    #SerScore := #SerScore * #SER_DECAY;
+END_IF;
+IF #SerScore >= #SER_TRIP AND NOT #Trip THEN
+    #Trip := TRUE;
+    #Kind := 1;
+END_IF;
+
+(* parallel arc *)
+IF #BurstCount > 0 THEN
+    #winMs := #winMs + 1;
+    IF #winMs > #PAR_WIN_MS THEN
+        #BurstCount := 0;
+        #winMs := 0;
+    END_IF;
+END_IF;
+IF #BurstMs >= #BURST_MIN_MS THEN
+    IF NOT #inBurst THEN
+        #BurstCount := #BurstCount + 1;
+        IF #BurstCount = 1 THEN
+            #winMs := 0;
+        END_IF;
+    END_IF;
+    #inBurst := TRUE;
+ELSE
+    #inBurst := FALSE;
+END_IF;
+IF #BurstCount >= #PAR_COUNT AND NOT #Trip THEN
+    #Trip := TRUE;
+    #Kind := 2;
+END_IF;
+END_FUNCTION_BLOCK

@@ -1,0 +1,48 @@
+# Candidate architectures (DOSSIER 9, 11) and the ConOps mission profile (DOSSIER 4).
+
+architectures:
+  A0_common_agm:
+    desc: Baseline. One common bank of 4 x 6T AGM (2s2p) feeds starter and mission loads; the controller disconnects mission loads at the engine-start reserve.
+    mission: {block: agm_6t, ns: 2, np: 2}
+    start: null
+    apu: null
+    soc_reserve: crank       # max(AGM DoD floor, crank reserve SOC at the bank temperature + 0.05); DOSSIER 8.4
+  A1_split_agm:
+    desc: Split banks. 4 x 6T AGM start bank (2s2p, sized for -32 degC cranking, DOSSIER 8.4) kept full by a combiner; mission bank of 6T AGM (2s x Np).
+    mission: {block: agm_6t, ns: 2, np: 4}
+    start: {block: agm_6t, ns: 2, np: 2}
+    apu: null
+    soc_reserve: floor
+  A2_split_li:
+    desc: Split banks. 4 x 6T AGM start bank (2s2p); mission bank of 24 V Li-ion 6T in parallel (1s x Np, max 12 per MIL-PRF-32565 Table I).
+    mission: {block: li_6t, ns: 1, np: 6}
+    start: {block: agm_6t, ns: 2, np: 2}
+    apu: null
+    soc_reserve: floor
+  A3_split_agm_apu:
+    desc: Split banks with a 5 kW under-armour APU that the controller starts when the mission bank needs it.
+    mission: {block: agm_6t, ns: 2, np: 2}
+    start: {block: agm_6t, ns: 2, np: 2}
+    apu: apu5
+    soc_reserve: floor
+  A4_common_agm_idle:
+    desc: Baseline bank; the controller idles the main engine to recharge (auto-idle).
+    mission: {block: agm_6t, ns: 2, np: 2}
+    start: null
+    apu: engine_idle
+    soc_reserve: crank
+  A5_split_li_apu:
+    desc: Split banks; Li-ion 6T mission bank (1s x Np) plus a 5 kW APU for hot-climate and long watches.
+    mission: {block: li_6t, ns: 1, np: 4}
+    start: {block: agm_6t, ns: 2, np: 2}
+    apu: apu5
+    soc_reserve: floor
+
+profiles:
+  # 24 h command-post day (DOSSIER 4.3 Mission Event Timeline). Climate is applied by the caller.
+  cp_day:
+    - {name: road march, hours: 3.0, mode: drive, engine: drive, t_amb: 25.0, rpm: 1600, crank_at_start: true}
+    - {name: set-up halt, hours: 0.5, mode: halt, engine: idle, t_amb: 25.0, rpm: 1100}
+    - {name: silent watch, hours: 12.0, mode: silent_watch, engine: "off", t_amb: 25.0, apu: auto, silent_req: false}
+    - {name: restart, hours: 0.05, mode: halt, engine: idle, t_amb: 25.0, rpm: 1100, crank_at_start: true}
+    - {name: displacement, hours: 2.0, mode: drive, engine: drive, t_amb: 25.0, rpm: 1600}

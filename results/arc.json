@@ -1,0 +1,48 @@
+{
+ "seed": 1000,
+ "n_each": 30,
+ "classes": {
+  "series": {
+   "n": 30,
+   "tripped": 30,
+   "max_ms": 34.949786,
+   "median_ms": 29.30183
+  },
+  "parallel": {
+   "n": 30,
+   "tripped": 30,
+   "max_ms": 153.046202,
+   "median_ms": 84.436125
+  },
+  "nuisance: radio transmit keying": {
+   "n": 30,
+   "tripped": 0,
+   "max_ms": null,
+   "median_ms": null
+  },
+  "nuisance: fan motor start + commutation ripple": {
+   "n": 30,
+   "tripped": 0,
+   "max_ms": null,
+   "median_ms": null
+  },
+  "nuisance: capacitive switch-on inrush": {
+   "n": 30,
+   "tripped": 0,
+   "max_ms": null,
+   "median_ms": null
+  },
+  "nuisance: 1275F bus ripple through a DC/DC": {
+   "n": 30,
+   "tripped": 0,
+   "max_ms": null,
+   "median_ms": null
+  },
+  "nuisance: 12 V initial engagement surge": {
+   "n": 30,
+   "tripped": 0,
+   "max_ms": null,
+   "median_ms": null
+  }
+ }
+}

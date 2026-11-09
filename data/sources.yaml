@@ -1,0 +1,85 @@
+# Charging sources, engine and the engine-start requirement (DOSSIER 8.3, 8.4).
+
+alternator:
+  name: 28 V high-output alternator, 570 A class
+  # No numeric 28 V output-vs-speed curve was obtainable (vendor PDFs blocked). The curve below is a
+  # DERIVED shape: rated 570 A from 1500 rpm alternator speed upwards in the vendor's speed range
+  # [APU-BRIEF09 slide 7: 570 A, 1500-8000 rpm]; the idle point is anchored at 390 A, the high-idle
+  # need stated for wheeled vehicles in [CERDEC2007 slide 4: 250/390 A standard/high idle]; cut-in
+  # assumed at 900 rpm. Hot derating ASSUMED 0.4 %/K above 25 degC (vendors publish separate
+  # hot curves [PULLEY2017]).
+  curve:                     # (alternator rpm, max A)
+    - [0, 0]
+    - [900, 0]
+    - [1400, 250]
+    - [2100, 390]
+    - [3000, 500]
+    - [4000, 555]
+    - [8000, 570]
+  pulley_ratio: 3.0          # [PULLEY2017] example 3:1; [PAT6371887] "about twice" - 3.0 taken
+  v_set_25: 28.0             # V at 25 degC; 25-30 V vehicle charging range for 6T pairs [MIL32143C 3.3]
+  v_comp_per_k: -0.036       # V/K for a 24 V lead-acid string (-3 mV/K/cell), ASSUMED
+  v_set_min: 27.0
+  v_set_max: 29.5
+  derate_from_c: 25.0
+  derate_per_k: 0.004
+  efficiency: 0.65           # [MILDTL62186] minimum efficiency 65 %
+  src: [APU-BRIEF09, CERDEC2007, PULLEY2017, PAT6371887, MILDTL62186, MIL32143C]
+
+apus:
+  apu5:
+    name: 5 kW 28 V DC APU, under armour
+    p_rated_w: 5000.0        # [APU5FP] 5 kW, 180 A
+    v_set: 28.0
+    fuel_idle_lph: 0.6       # ASSUMED (no-load point not published)
+    fuel_rated_lph: 1.8      # [APU5FP] about 1.8 L/h at nominal power; [APU5DCT] 1.92 L/h at 5 kW
+    mass_kg: 245.0           # [APU5FP] wet; [APU5DCT] ~95 kg without armour integration
+    volume_l: 348.0          # [APU5FP] 864 x 737 x 546 mm
+    noise_dba_7m: 55.0       # [APU5FP] about 55 dB(A) at 7 m
+    mtbf_h: 1213.0           # [APU-BRIEF09] predicted MTBF of a 14 kW APU (only published APU MTBF)
+    cost_eur: 60000.0        # ASSUMED order of magnitude (no APU unit price published)
+    src: [APU5FP, APU5DCT, APU-BRIEF09]
+  apu10:
+    name: 10 kW 28 V DC APU, under armour
+    p_rated_w: 10000.0       # [APU10]
+    v_set: 28.0
+    fuel_idle_lph: 1.0       # ASSUMED
+    fuel_rated_lph: 3.6      # [APU10] 0.96 gal/h (load point not stated)
+    mass_kg: 190.0           # [APU10]
+    volume_l: 260.0          # [APU10] 53.5 x 24 x 12.5 in
+    noise_dba_7m: 60.0       # ASSUMED (not published)
+    mtbf_h: 1213.0
+    cost_eur: 90000.0        # ASSUMED
+    src: [APU10, APU-BRIEF09]
+  engine_idle:
+    name: Main engine at tactical idle as the charging source (auto-idle)
+    p_rated_w: 10920.0       # DERIVED: 390 A x 28 V alternator output at high idle
+    v_set: 28.0
+    fuel_idle_lph: 3.1       # [IDLE2003] 3.1 L/h mean of 42 idle tests on class-8 trucks (analogue)
+    fuel_rated_lph: 3.6      # ASSUMED: +0.5 L/h for the alternator load (10.9 kW / 0.65 / ~40 % engine eff. = ~1 L/h upper bound)
+    mass_kg: 0.0
+    volume_l: 0.0
+    noise_dba_7m: 75.0       # ASSUMED order of magnitude for a large diesel at idle with open grilles
+    mtbf_h: 5000.0           # ASSUMED; engine hours cost wear and maintenance (not in MTBF terms)
+    cost_eur: 0.0
+    src: [IDLE2003, CERDEC2007]
+
+engine:
+  idle_lph: 3.1              # [IDLE2003]
+  keepalive_w: 30.0          # engine ECU, vehicle electronics standby on the start bus, ASSUMED
+  idle_rpm: 700              # [PULLEY2017] worked example
+  tactical_idle_rpm: 1100    # [PAT6371887] tactical idle 1000-1200 rpm
+  src: [IDLE2003, PULLEY2017, PAT6371887]
+
+crank:
+  cold:
+    # Engine-start requirement used for the reserve (DOSSIER SR-20..SR-22): three 10 s attempts with
+    # 60 s rest at 600 A, with the 28 V bus >= 16 V throughout (MIL-STD-1275E 5.1.2.2 cranking floor,
+    # so the vehicle electronics stay up). 600 A is ASSUMED for a 10-13 L diesel at -32 degC; it equals
+    # the -32 degC rating of the Type 3 Li-ion 6T [MIL32565 Table I], which suggests the class.
+    i_a: 600.0
+    seconds: 10.0
+    attempts: 3
+    rest_s: 60.0
+    v_min: 16.0
+    src: [MIL1275E, MIL32565]

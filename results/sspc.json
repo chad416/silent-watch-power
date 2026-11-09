@@ -1,0 +1,535 @@
+{
+ "channels": [
+  {
+   "channel": 1,
+   "loads": [
+    "VHF1"
+   ],
+   "priority": 1,
+   "peak_w": 450.0,
+   "i_peak_a": 22.5,
+   "rating_a": 35.0,
+   "wire_mm2": 6.0,
+   "wire_iss_a": 42.000094,
+   "min_damage_to_trip": 1.480242
+  },
+  {
+   "channel": 2,
+   "loads": [
+    "VHF2"
+   ],
+   "priority": 2,
+   "peak_w": 450.0,
+   "i_peak_a": 22.5,
+   "rating_a": 35.0,
+   "wire_mm2": 6.0,
+   "wire_iss_a": 42.000094,
+   "min_damage_to_trip": 1.480242
+  },
+  {
+   "channel": 3,
+   "loads": [
+    "WB"
+   ],
+   "priority": 2,
+   "peak_w": 210.0,
+   "i_peak_a": 10.5,
+   "rating_a": 15.0,
+   "wire_mm2": 4.0,
+   "wire_iss_a": 31.469354,
+   "min_damage_to_trip": 5.378016
+  },
+  {
+   "channel": 4,
+   "loads": [
+    "HF"
+   ],
+   "priority": 2,
+   "peak_w": 560.0,
+   "i_peak_a": 28.0,
+   "rating_a": 35.0,
+   "wire_mm2": 6.0,
+   "wire_iss_a": 42.000094,
+   "min_damage_to_trip": 1.480242
+  },
+  {
+   "channel": 5,
+   "loads": [
+    "SATC2"
+   ],
+   "priority": 2,
+   "peak_w": 560.0,
+   "i_peak_a": 28.0,
+   "rating_a": 35.0,
+   "wire_mm2": 6.0,
+   "wire_iss_a": 42.000094,
+   "min_damage_to_trip": 1.480242
+  },
+  {
+   "channel": 6,
+   "loads": [
+    "CORE-SW",
+    "CORE-INS",
+    "CORE-IC"
+   ],
+   "priority": 1,
+   "peak_w": 75.0,
+   "i_peak_a": 3.75,
+   "rating_a": 5.0,
+   "wire_mm2": 0.75,
+   "wire_iss_a": 9.635482,
+   "min_damage_to_trip": 3.946216
+  },
+  {
+   "channel": 7,
+   "loads": [
+    "MC1"
+   ],
+   "priority": 1,
+   "peak_w": 150.0,
+   "i_peak_a": 7.5,
+   "rating_a": 10.0,
+   "wire_mm2": 1.5,
+   "wire_iss_a": 15.611266,
+   "min_damage_to_trip": 1.323701
+  },
+  {
+   "channel": 8,
+   "loads": [
+    "MC2"
+   ],
+   "priority": 2,
+   "peak_w": 150.0,
+   "i_peak_a": 7.5,
+   "rating_a": 10.0,
+   "wire_mm2": 1.5,
+   "wire_iss_a": 15.611266,
+   "min_damage_to_trip": 1.323701
+  },
+  {
+   "channel": 9,
+   "loads": [
+    "WS34"
+   ],
+   "priority": 3,
+   "peak_w": 300.0,
+   "i_peak_a": 15.0,
+   "rating_a": 20.0,
+   "wire_mm2": 4.0,
+   "wire_iss_a": 31.469354,
+   "min_damage_to_trip": 1.520465
+  },
+  {
+   "channel": 10,
+   "loads": [
+    "MAST"
+   ],
+   "priority": 3,
+   "peak_w": 420.0,
+   "i_peak_a": 21.0,
+   "rating_a": 35.0,
+   "wire_mm2": 6.0,
+   "wire_iss_a": 42.000094,
+   "min_damage_to_trip": 1.480242
+  },
+  {
+   "channel": 11,
+   "loads": [
+    "HCLOS"
+   ],
+   "priority": 3,
+   "peak_w": 130.0,
+   "i_peak_a": 6.5,
+   "rating_a": 10.0,
+   "wire_mm2": 1.5,
+   "wire_iss_a": 15.611266,
+   "min_damage_to_trip": 1.323701
+  },
+  {
+   "channel": 12,
+   "loads": [
+    "RWS"
+   ],
+   "priority": 2,
+   "peak_w": 1008.0,
+   "i_peak_a": 50.4,
+   "rating_a": 75.0,
+   "wire_mm2": 25.0,
+   "wire_iss_a": 121.243828,
+   "min_damage_to_trip": 15.57627
+  },
+  {
+   "channel": 13,
+   "loads": [
+    "CBRN"
+   ],
+   "priority": 2,
+   "peak_w": 300.0,
+   "i_peak_a": 15.0,
+   "rating_a": 20.0,
+   "wire_mm2": 4.0,
+   "wire_iss_a": 31.469354,
+   "min_damage_to_trip": 1.520465
+  },
+  {
+   "channel": 14,
+   "loads": [
+    "ECU"
+   ],
+   "priority": 2,
+   "peak_w": 3979.903537,
+   "i_peak_a": 198.995177,
+   "rating_a": 300.0,
+   "wire_mm2": 120.0,
+   "wire_iss_a": 383.00285,
+   "min_damage_to_trip": 11.457392
+  },
+  {
+   "channel": 15,
+   "loads": [
+    "INV"
+   ],
+   "priority": 4,
+   "peak_w": 300.0,
+   "i_peak_a": 15.0,
+   "rating_a": 20.0,
+   "wire_mm2": 4.0,
+   "wire_iss_a": 31.469354,
+   "min_damage_to_trip": 1.520465
+  },
+  {
+   "channel": 16,
+   "loads": [
+    "CABIN"
+   ],
+   "priority": 4,
+   "peak_w": 40.0,
+   "i_peak_a": 2.0,
+   "rating_a": 5.0,
+   "wire_mm2": 0.75,
+   "wire_iss_a": 9.635482,
+   "min_damage_to_trip": 3.946216
+  }
+ ],
+ "worst_damage_to_trip": 1.323701,
+ "fault_cases": [
+  {
+   "id": "F1",
+   "name": "Bolted short at the load end",
+   "trip_s": 0.00025,
+   "damage_s": 1038.319945,
+   "covered": true,
+   "how": "trip"
+  },
+  {
+   "id": "F2",
+   "name": "Short to chassis mid-run (chafe)",
+   "trip_s": 0.00025,
+   "damage_s": 1300.03808,
+   "covered": true,
+   "how": "trip"
+  },
+  {
+   "id": "F3",
+   "name": "Stalled fan motor (3 x rated)",
+   "trip_s": 1.046239,
+   "damage_s": 246.636625,
+   "covered": true,
+   "how": "trip"
+  },
+  {
+   "id": "F4",
+   "name": "Overload 150 %",
+   "trip_s": 8.660377,
+   "damage_s": "inf",
+   "covered": true,
+   "how": "trip"
+  },
+  {
+   "id": "F5",
+   "name": "Overload 120 % (inside the no-trip band of a fuse-like curve)",
+   "trip_s": 68.361702,
+   "damage_s": "inf",
+   "covered": true,
+   "how": "trip"
+  },
+  {
+   "id": "F6",
+   "name": "Open circuit / connector pulled",
+   "trip_s": null,
+   "damage_s": null,
+   "covered": true,
+   "how": "undercurrent"
+  },
+  {
+   "id": "F7",
+   "name": "Series arc / high-resistance joint (current falls)",
+   "trip_s": "inf",
+   "damage_s": "inf",
+   "covered": false,
+   "how": "no trip, wire safe"
+  },
+  {
+   "id": "F8",
+   "name": "Intermittent parallel arc (5 ms bursts at 8 x)",
+   "trip_s": null,
+   "damage_s": null,
+   "covered": false,
+   "how": "none"
+  }
+ ],
+ "coverage": "6/8",
+ "rep_wire_mm2": 1.5,
+ "curve": [
+  [
+   1.0,
+   "inf",
+   "inf"
+  ],
+  [
+   1.078085,
+   "inf",
+   "inf"
+  ],
+  [
+   1.162268,
+   283.17433,
+   "inf"
+  ],
+  [
+   1.253023,
+   32.445676,
+   "inf"
+  ],
+  [
+   1.350866,
+   15.990206,
+   "inf"
+  ],
+  [
+   1.456348,
+   10.060105,
+   "inf"
+  ],
+  [
+   1.570068,
+   7.029943,
+   2.156352
+  ],
+  [
+   1.692667,
+   5.207049,
+   30.545212
+  ],
+  [
+   1.824839,
+   4.001173,
+   58.934072
+  ],
+  [
+   1.967332,
+   3.152605,
+   87.322931
+  ],
+  [
+   2.120951,
+   2.529178,
+   115.711791
+  ],
+  [
+   2.286566,
+   2.056514,
+   144.10065
+  ],
+  [
+   2.465112,
+   1.68953,
+   172.48951
+  ],
+  [
+   2.657601,
+   1.399306,
+   200.87837
+  ],
+  [
+   2.86512,
+   1.166427,
+   229.267229
+  ],
+  [
+   3.088844,
+   0.977374,
+   257.656089
+  ],
+  [
+   3.330036,
+   0.822442,
+   286.044949
+  ],
+  [
+   3.590063,
+   0.694489,
+   314.433808
+  ],
+  [
+   3.870393,
+   0.588141,
+   342.822668
+  ],
+  [
+   4.172614,
+   0.499279,
+   371.211528
+  ],
+  [
+   4.498433,
+   0.424699,
+   399.600387
+  ],
+  [
+   4.849693,
+   0.361873,
+   427.989247
+  ],
+  [
+   5.228382,
+   0.308782,
+   456.378107
+  ],
+  [
+   5.636641,
+   0.2638,
+   484.766966
+  ],
+  [
+   6.076779,
+   0.00025,
+   513.155826
+  ],
+  [
+   6.551286,
+   0.00025,
+   541.544686
+  ],
+  [
+   7.062844,
+   0.00025,
+   569.933545
+  ],
+  [
+   7.614347,
+   0.00025,
+   598.322405
+  ],
+  [
+   8.208914,
+   0.00025,
+   626.711264
+  ],
+  [
+   8.849908,
+   0.00025,
+   655.100124
+  ],
+  [
+   9.540955,
+   0.00025,
+   683.488984
+  ],
+  [
+   10.285962,
+   0.00025,
+   711.877843
+  ],
+  [
+   11.089142,
+   0.00025,
+   740.266703
+  ],
+  [
+   11.95504,
+   0.00025,
+   768.655563
+  ],
+  [
+   12.888551,
+   0.00025,
+   797.044422
+  ],
+  [
+   13.894955,
+   0.00025,
+   825.433282
+  ],
+  [
+   14.979944,
+   0.00025,
+   853.822142
+  ],
+  [
+   16.149656,
+   0.00025,
+   882.211001
+  ],
+  [
+   17.410704,
+   0.00025,
+   910.599861
+  ],
+  [
+   18.770221,
+   0.00025,
+   938.988721
+  ],
+  [
+   20.235896,
+   0.00025,
+   967.37758
+  ],
+  [
+   21.816019,
+   0.00025,
+   995.76644
+  ],
+  [
+   23.519526,
+   0.00025,
+   1024.1553
+  ],
+  [
+   25.356052,
+   0.00025,
+   1052.544159
+  ],
+  [
+   27.335983,
+   0.00025,
+   1080.933019
+  ],
+  [
+   29.470517,
+   0.00025,
+   1109.321878
+  ],
+  [
+   31.771727,
+   0.00025,
+   1137.710738
+  ],
+  [
+   34.252626,
+   0.00025,
+   1166.099598
+  ],
+  [
+   36.927248,
+   0.00025,
+   1194.488457
+  ],
+  [
+   39.810717,
+   0.00025,
+   1222.877317
+  ]
+ ]
+}

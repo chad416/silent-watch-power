@@ -1,0 +1,108 @@
+{
+ "spec": [
+  {
+   "test": "C20: 6 A for >= 20 h (120 Ah)",
+   "model": "1200 min",
+   "required": ">= 1200 min",
+   "pass": true
+  },
+  {
+   "test": "Reserve capacity: 25 A for >= 230 min",
+   "model": "232 min",
+   "required": ">= 230 min",
+   "pass": true
+  },
+  {
+   "test": "CCA: 1100 A, 30 s, -18 degC, >= 7.2 V",
+   "model": "7.20 V",
+   "required": ">= 7.2 V",
+   "pass": true
+  },
+  {
+   "test": "Low temp: 400 A, 30 s, -40 degC, >= 7.2 V",
+   "model": "7.20 V",
+   "required": ">= 7.2 V",
+   "pass": true
+  },
+  {
+   "test": "Capacity: 90 A for >= 1 h (90 Ah at 1 h rate)",
+   "model": "60 min",
+   "required": ">= 60 min",
+   "pass": true
+  },
+  {
+   "test": "Cranking: 1100 A, 30 s, -18 degC, >= 14.4 V",
+   "model": "14.40 V",
+   "required": ">= 14.4 V",
+   "pass": true
+  },
+  {
+   "test": "Cranking: 600 A, 30 s, -32 degC, >= 14.4 V",
+   "model": "14.40 V",
+   "required": ">= 14.4 V",
+   "pass": true
+  },
+  {
+   "test": "Cranking: 400 A, 30 s, -40 degC, >= 14.4 V",
+   "model": "14.40 V",
+   "required": ">= 14.4 V",
+   "pass": true
+  }
+ ],
+ "product": [
+  {
+   "current_a": 633.5,
+   "product_min": 2,
+   "model_min": 2.066667,
+   "ratio": 1.033333
+  },
+  {
+   "current_a": 292.0,
+   "product_min": 10,
+   "model_min": 13.383333,
+   "ratio": 1.338333
+  },
+  {
+   "current_a": 138.2,
+   "product_min": 30,
+   "model_min": 31.8,
+   "ratio": 1.06
+  },
+  {
+   "current_a": 80.7,
+   "product_min": 60,
+   "model_min": 59.25,
+   "ratio": 0.9875
+  },
+  {
+   "current_a": 45.4,
+   "product_min": 120,
+   "model_min": 115.32,
+   "ratio": 0.961
+  },
+  {
+   "current_a": 25.0,
+   "product_min": 240,
+   "model_min": 230.04,
+   "ratio": 0.9585
+  },
+  {
+   "current_a": 20.5,
+   "product_min": 300,
+   "model_min": 289.5,
+   "ratio": 0.965
+  },
+  {
+   "current_a": 11.0,
+   "product_min": 600,
+   "model_min": 595.2,
+   "ratio": 0.992
+  },
+  {
+   "current_a": 6.0,
+   "product_min": 1200,
+   "model_min": 1200.0,
+   "ratio": 1.0
+  }
+ ]
+}

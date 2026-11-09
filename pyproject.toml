@@ -1,0 +1,26 @@
+[project]
+name = "swpower"
+version = "0.2.0"
+description = "28 V vehicle power system and silent-watch model: batteries, alternator, APU, load management (IEC 61131-3 ST), MIL-STD-1275E front end, bay thermal budget, AoA and RMA"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26", "matplotlib>=3.8", "PyYAML>=6.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0", "ruff>=0.5"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"
+
+[tool.ruff]
+line-length = 140
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "I"]
+ignore = ["E402", "B905", "E741"]
+
+[tool.ruff.lint.per-file-ignores]
+"tools/results_md.py" = ["E501"]   # Markdown table headers

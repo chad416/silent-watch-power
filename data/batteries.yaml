@@ -1,0 +1,93 @@
+# Battery blocks (DOSSIER 8.2). The design case is a block that *just meets its military
+# specification* (MIL-PRF-32143C Table I, MIL-PRF-32565 Table I), not a brochure value: a fleet
+# battery may be any qualified product, so the system must work with the worst qualified one.
+# r0_table cold points are DERIVED by tools/derive_battery_params.py from the spec cranking ratings
+# (run it after any change here; tests/unit/test_battery.py checks the values are current).
+
+blocks:
+  agm_6t:
+    name: 6T AGM lead-acid, 12 V, spec-minimum (MIL-PRF-32143C Type I)
+    chem: pb_agm
+    v_nom: 12.0                 # 32143C Table I
+    c_rated_ah: 120.0           # 32143C Table I: 120 Ah at the 20 h rate (6.0 A)
+    i_ref_a: 6.0
+    peukert_k: 1.1575           # derived: 120 Ah @ 6 A and 230 min @ 25 A (RC) -> k = 1 + ln(120/95.83)/ln(25/6)
+    r0_table:                   # (degC, ohm per block); 25 degC: 32143C "2 mOhm +/- 0.6 mOhm" -> upper 2.6 mOhm
+      - [-40.0, 0.014250]
+      - [-18.0, 0.004891]
+      - [25.0, 0.002600]
+    r1: 0.0004                  # polarisation branch, assumed
+    tau1_s: 60.0                # assumed
+    ocv_soc:                    # 12.9 V full: product datasheet [AGM-DS1]; 11.8 V empty: assumed (linear OCV-SOC rule for AGM)
+      - [0.0, 11.8]
+      - [1.0, 12.9]
+    cap_temp:                   # capacity factor vs temperature. 0..-18 degC: mean of two AGM datasheets
+      - [-46.0, 0.15]           #   [AGM-DS2] 85 % @ 0, 65 % @ -15; [AGM-DS3] ~71 % @ 4, ~37 % @ -18 (read off chart)
+      - [-32.0, 0.30]           # below -18 degC: extrapolated, ASSUMED (no source found)
+      - [-18.0, 0.50]
+      - [0.0, 0.78]
+      - [25.0, 1.0]
+      - [49.0, 1.10]            # [AGM-DS3] ~115 % @ 49 degC; 1.10 taken (aging penalty at heat not modelled)
+    v_cutoff: 10.5              # 1.75 V/cell, end voltage of the run-time tables [AGM-DS1]
+    soc_min: 0.0
+    dod_floor: 0.30             # [AGM-DS1] usable reserve 70 % DoD: the controller keeps AGM banks above 30 % SOC
+    mass_kg: 40.75              # 32143C Table I maximum (34 kg desired)
+    volume_l: 17.7              # 286 x 269 x 230 mm incl. terminals and handles [AGM-DS1]
+    eta_charge: 0.90            # assumed
+    i_charge_max_a: 60.0        # assumed (0.5 C)
+    t_charge_min_c: -40.0       # [AGM-DS1] operating range -40..80 degC
+    cp_j_per_kgk: 800.0         # assumed (lead + acid + case)
+    ua_w_per_k: 1.5             # assumed, in a closed battery box
+    r_soc_factor: 0.5           # assumed
+    cost_eur: 520.0             # DoD standard price $567.86 [DLA-6TAGM], indicative, ~0.92 EUR/USD
+    src: [MIL32143C, AGM-DS1, AGM-DS2, AGM-DS3, DLA-6TAGM]
+
+  li_6t:
+    name: 6T lithium-ion, 24 V, spec-minimum (MIL-PRF-32565 Type 3)
+    chem: li_ion
+    v_nom: 24.0                 # 32565 Table I
+    c_rated_ah: 90.0            # 32565 Table I Type 3: 90 Ah at the 1 h rate, 22 degC
+    i_ref_a: 90.0
+    peukert_k: 1.03             # assumed (Li-ion rate dependence is small)
+    r0_table:                   # 25 degC assumed; cold points derived from Type 3 cranking ratings (>= 14.4 V below 0 degC)
+      - [-40.0, 0.032000]
+      - [-32.0, 0.021333]
+      - [-18.0, 0.011636]
+      - [25.0, 0.005000]
+    r1: 0.001
+    tau1_s: 30.0
+    ocv_soc:                    # typical LiFePO4 OCV shape x 8 cells, ASSUMED (32565 does not fix the chemistry)
+      - [0.0, 24.0]
+      - [0.05, 25.6]
+      - [0.10, 25.9]
+      - [0.20, 26.15]
+      - [0.40, 26.3]
+      - [0.60, 26.4]
+      - [0.80, 26.6]
+      - [0.95, 26.8]
+      - [1.0, 27.2]
+    cap_temp:                   # LiFePO4 cell at 0.2C [LI2013]: 75.6 % @ -10, 59.0 % @ -20, 46.4 % @ -30, 37.6 % @ -40
+      - [-46.0, 0.33]           # -46: extrapolated, ASSUMED
+      - [-40.0, 0.376]
+      - [-30.0, 0.464]
+      - [-20.0, 0.59]
+      - [-10.0, 0.756]
+      - [22.0, 1.0]
+      - [49.0, 1.0]
+    v_cutoff: 20.0              # 2.5 V/cell BMS cut-off, assumed
+    soc_min: 0.0                # the 90 Ah rating is full-to-BMS-cut-off
+    dod_floor: 0.05             # controller floor above the BMS cut-off, ASSUMED
+    mass_kg: 30.0               # 32565 Table I max
+    volume_l: 17.7              # 6T form factor (STANAG 4015), same box as the AGM
+    eta_charge: 0.99
+    i_charge_max_a: 90.0        # 32565 Type 3 continuous charge rating
+    i_max_a: 180.0              # 32565 Type 3 continuous discharge rating
+    t_charge_min_c: 0.0         # 32565 3.3.5.2.3 d: must charge above 0 degC internal; below, the heater must warm it first
+    heater_w: 1000.0            # derived from [LFP6T-BRIEF]: 12 V/120 Ah LFP 6T heated -40 -> +20 degC in 0.40 h using 32 Ah (~1.0 kW)
+    heater_on_c: -10.0          # heater keeps the cells above -10 degC (control band assumed)
+    heater_off_c: 0.0
+    cp_j_per_kgk: 960.0         # derived from [LFP6T-BRIEF]: 0.53 Ah (12.8 V) per degC for a 25.5 kg block
+    ua_w_per_k: 1.5             # assumed
+    r_soc_factor: 0.3
+    cost_eur: 10500.0           # DoD standard price $11,426 for a 105 Ah Li-ion 6T [DLA-LI6T], indicative
+    src: [MIL32565, LFP6T-BRIEF, LI2013, DLA-LI6T]

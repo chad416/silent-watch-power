@@ -1,0 +1,397 @@
+{
+ "criteria": [
+  {
+   "id": "sw_hot",
+   "name": "Silent essential endurance at +43 degC",
+   "unit": "h",
+   "rating": 10,
+   "shape": "s",
+   "worst": 0,
+   "best": 12,
+   "threshold": 4
+  },
+  {
+   "id": "sw_cold",
+   "name": "Silent essential endurance at -32 degC",
+   "unit": "h",
+   "rating": 9,
+   "shape": "s",
+   "worst": 0,
+   "best": 12,
+   "threshold": 4
+  },
+  {
+   "id": "watch12_dba",
+   "name": "Loudest charging source during a 12 h watch (dB(A) at 7 m)",
+   "unit": "dBA",
+   "rating": 7,
+   "shape": "dec",
+   "worst": 75,
+   "best": 35
+  },
+  {
+   "id": "watch12_fuel",
+   "name": "Fuel for a 12 h watch at +43 degC",
+   "unit": "L",
+   "rating": 3,
+   "shape": "dec",
+   "worst": 40,
+   "best": 0
+  },
+  {
+   "id": "added_mass",
+   "name": "Added mass over the baseline bank",
+   "unit": "kg",
+   "rating": 6,
+   "shape": "dec",
+   "worst": 1000,
+   "best": 0
+  },
+  {
+   "id": "added_volume",
+   "name": "Added volume over the baseline bank",
+   "unit": "L",
+   "rating": 4,
+   "shape": "dec",
+   "worst": 600,
+   "best": 0
+  },
+  {
+   "id": "added_cost",
+   "name": "Added acquisition cost (indicative)",
+   "unit": "kEUR",
+   "rating": 4,
+   "shape": "dec",
+   "worst": 150,
+   "best": 0
+  },
+  {
+   "id": "r_watch",
+   "name": "Power-system reliability over a 12 h watch",
+   "unit": "-",
+   "rating": 6,
+   "shape": "inc",
+   "worst": 0.95,
+   "best": 0.999
+  },
+  {
+   "id": "watch12_ess",
+   "name": "Essential suite kept for a 12 h watch at +43 degC (any source)",
+   "unit": "h",
+   "rating": 8,
+   "shape": "s",
+   "worst": 0,
+   "best": 12
+  }
+ ],
+ "weights": [
+  0.1754,
+  0.1579,
+  0.1228,
+  0.0526,
+  0.1053,
+  0.0702,
+  0.0702,
+  0.1053,
+  0.1404
+ ],
+ "alternatives": {
+  "A0": {
+   "key": "A0",
+   "label": "Baseline: 4 x 6T AGM common bank",
+   "arch": "A0_common_agm",
+   "np": 2,
+   "apu": "",
+   "blocks_mission": 4,
+   "blocks_start": 0,
+   "values": {
+    "sw_hot": 0.605556,
+    "sw_cold": 0.383333,
+    "watch12_dba": 35.0,
+    "watch12_fuel": 0.0,
+    "added_mass": 0.0,
+    "added_volume": 0.0,
+    "added_cost": 0.0,
+    "r_watch": 0.992862,
+    "watch12_ess": 0.605556
+   },
+   "crank_after_cold_watch": false,
+   "crank_vmin_cold": 0.0,
+   "full_hot_h": 0.35,
+   "vital_hot_h": 2.838889,
+   "apu_hours_12h": 0.0,
+   "k_needed": 2
+  },
+  "A1": {
+   "key": "A1",
+   "label": "Split banks, 20 x 6T AGM mission bank",
+   "arch": "A1_split_agm",
+   "np": 10,
+   "apu": "",
+   "blocks_mission": 20,
+   "blocks_start": 4,
+   "values": {
+    "sw_hot": 3.966667,
+    "sw_cold": 2.55,
+    "watch12_dba": 35.0,
+    "watch12_fuel": 0.0,
+    "added_mass": 815.0,
+    "added_volume": 354.0,
+    "added_cost": 10.4,
+    "r_watch": 0.990838,
+    "watch12_ess": 3.966667
+   },
+   "crank_after_cold_watch": true,
+   "crank_vmin_cold": 18.420181,
+   "full_hot_h": 2.283333,
+   "vital_hot_h": 17.355556,
+   "apu_hours_12h": 0.0,
+   "k_needed": 10
+  },
+  "A2": {
+   "key": "A2",
+   "label": "Split banks, 10 x Li-ion 6T mission bank",
+   "arch": "A2_split_li",
+   "np": 10,
+   "apu": "",
+   "blocks_mission": 10,
+   "blocks_start": 4,
+   "values": {
+    "sw_hot": 4.577778,
+    "sw_cold": 6.283333,
+    "watch12_dba": 35.0,
+    "watch12_fuel": 0.0,
+    "added_mass": 300.0,
+    "added_volume": 177.0,
+    "added_cost": 105.0,
+    "r_watch": 0.993217,
+    "watch12_ess": 4.577778
+   },
+   "crank_after_cold_watch": true,
+   "crank_vmin_cold": 18.432076,
+   "full_hot_h": 2.655556,
+   "vital_hot_h": 18.05,
+   "apu_hours_12h": 0.0,
+   "k_needed": 9
+  },
+  "A3": {
+   "key": "A3",
+   "label": "Split banks, 4 x 6T AGM + 5 kW APU",
+   "arch": "A3_split_agm_apu",
+   "np": 2,
+   "apu": "apu5",
+   "blocks_mission": 4,
+   "blocks_start": 4,
+   "values": {
+    "sw_hot": 0.616667,
+    "sw_cold": 0.394444,
+    "watch12_dba": 55.0,
+    "watch12_fuel": 18.715368,
+    "added_mass": 408.0,
+    "added_volume": 418.8,
+    "added_cost": 62.08,
+    "r_watch": 0.982975,
+    "watch12_ess": 12.0
+   },
+   "crank_after_cold_watch": true,
+   "crank_vmin_cold": 18.388899,
+   "full_hot_h": 0.361111,
+   "vital_hot_h": 3.066667,
+   "apu_hours_12h": 11.1,
+   "k_needed": 2
+  },
+  "A4": {
+   "key": "A4",
+   "label": "Baseline bank + engine auto-idle",
+   "arch": "A4_common_agm_idle",
+   "np": 2,
+   "apu": "engine_idle",
+   "blocks_mission": 4,
+   "blocks_start": 0,
+   "values": {
+    "sw_hot": 0.605556,
+    "sw_cold": 0.383333,
+    "watch12_dba": 75.0,
+    "watch12_fuel": 27.789528,
+    "added_mass": 0.0,
+    "added_volume": 0.0,
+    "added_cost": 0.0,
+    "r_watch": 0.990482,
+    "watch12_ess": 12.0
+   },
+   "crank_after_cold_watch": false,
+   "crank_vmin_cold": 0.0,
+   "full_hot_h": 0.35,
+   "vital_hot_h": 2.838889,
+   "apu_hours_12h": 8.1,
+   "k_needed": 2
+  },
+  "A5": {
+   "key": "A5",
+   "label": "Split banks, 10 x Li-ion 6T + 5 kW APU",
+   "arch": "A5_split_li_apu",
+   "np": 10,
+   "apu": "apu5",
+   "blocks_mission": 10,
+   "blocks_start": 4,
+   "values": {
+    "sw_hot": 4.577778,
+    "sw_cold": 6.283333,
+    "watch12_dba": 55.0,
+    "watch12_fuel": 14.625676,
+    "added_mass": 545.0,
+    "added_volume": 525.0,
+    "added_cost": 165.0,
+    "r_watch": 0.983444,
+    "watch12_ess": 12.0
+   },
+   "crank_after_cold_watch": true,
+   "crank_vmin_cold": 18.432076,
+   "full_hot_h": 2.655556,
+   "vital_hot_h": 18.05,
+   "apu_hours_12h": 8.444444,
+   "k_needed": 9
+  }
+ },
+ "score": {
+  "screened_out": {
+   "A0": [
+    "sw_hot",
+    "sw_cold",
+    "crank_after_cold_watch"
+   ],
+   "A1": [
+    "sw_hot",
+    "sw_cold"
+   ],
+   "A3": [
+    "sw_hot",
+    "sw_cold"
+   ],
+   "A4": [
+    "sw_hot",
+    "sw_cold",
+    "crank_after_cold_watch"
+   ]
+  },
+  "utility": {
+   "A2": {
+    "sw_hot": 0.2305,
+    "sw_cold": 0.5596,
+    "watch12_dba": 1.0,
+    "watch12_fuel": 1.0,
+    "added_mass": 0.7,
+    "added_volume": 0.705,
+    "added_cost": 0.3,
+    "r_watch": 0.882,
+    "watch12_ess": 0.2305
+   },
+   "A5": {
+    "sw_hot": 0.2305,
+    "sw_cold": 0.5596,
+    "watch12_dba": 0.5,
+    "watch12_fuel": 0.6344,
+    "added_mass": 0.455,
+    "added_volume": 0.125,
+    "added_cost": 0.0,
+    "r_watch": 0.6825,
+    "watch12_ess": 1.0
+   }
+  },
+  "fom": {
+   "A2": 0.573632,
+   "A5": 0.492445
+  },
+  "ranking": [
+   "A2",
+   "A5"
+  ]
+ },
+ "sensitivity": [
+  {
+   "criterion": "sw_hot",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.579759,
+    "A5": 0.497122
+   }
+  },
+  {
+   "criterion": "sw_cold",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.573858,
+    "A5": 0.491368
+   }
+  },
+  {
+   "criterion": "watch12_dba",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.568331,
+    "A5": 0.492351
+   }
+  },
+  {
+   "criterion": "watch12_fuel",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.571376,
+    "A5": 0.491694
+   }
+  },
+  {
+   "criterion": "added_mass",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.572288,
+    "A5": 0.492843
+   }
+  },
+  {
+   "criterion": "added_volume",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.572704,
+    "A5": 0.495042
+   }
+  },
+  {
+   "criterion": "added_cost",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.575566,
+    "A5": 0.495925
+   }
+  },
+  {
+   "criterion": "r_watch",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.570352,
+    "A5": 0.490423
+   }
+  },
+  {
+   "criterion": "watch12_ess",
+   "winner": "A2",
+   "same_winner": true,
+   "fom": {
+    "A2": 0.578517,
+    "A5": 0.48522
+   }
+  }
+ ],
+ "mc_weights": {
+  "A2": 0.9895,
+  "A5": 0.0105
+ }
+}

@@ -1,0 +1,308 @@
+{
+ "modes": {
+  "drive": {
+   "mode": "drive",
+   "cbe_w": 1784.23,
+   "with_growth_w": 1903.4415,
+   "allocated_w": 2093.78565,
+   "coincident_peak_w": 3599
+  },
+  "halt": {
+   "mode": "halt",
+   "cbe_w": 1988.43,
+   "with_growth_w": 2147.8515,
+   "allocated_w": 2362.63665,
+   "coincident_peak_w": 4027
+  },
+  "silent_watch": {
+   "mode": "silent_watch",
+   "cbe_w": 1988.43,
+   "with_growth_w": 2147.8515,
+   "allocated_w": 2362.63665,
+   "coincident_peak_w": 4027
+  }
+ },
+ "by_priority_sw_w": {
+  "1": 359.925,
+  "2": 791.2965,
+  "3": 639.63,
+  "4": 357.0
+ },
+ "loads": [
+  {
+   "id": "VHF1",
+   "name": "VHF combat net radio 1 (command net), 50 W vehicular amplifier",
+   "priority": 1,
+   "channel": 1,
+   "basis": "sourced",
+   "src": [
+    "VHFPA",
+    "CERDEC2007"
+   ],
+   "sw_avg_w": 103.5,
+   "sw_peak_w": 450,
+   "drive_avg_w": 103.5
+  },
+  {
+   "id": "VHF2",
+   "name": "VHF combat net radio 2 (second net), 50 W vehicular amplifier",
+   "priority": 2,
+   "channel": 2,
+   "basis": "sourced",
+   "src": [
+    "VHFPA"
+   ],
+   "sw_avg_w": 84.25,
+   "sw_peak_w": 450,
+   "drive_avg_w": 84.25
+  },
+  {
+   "id": "WB",
+   "name": "Wideband multiband radio (UHF SATCOM / MANET) in a 50 W vehicular amplifier adapter",
+   "priority": 2,
+   "channel": 3,
+   "basis": "derived",
+   "src": [
+    "WBRADIO"
+   ],
+   "sw_avg_w": 86.5,
+   "sw_peak_w": 210,
+   "drive_avg_w": 86.5
+  },
+  {
+   "id": "HF",
+   "name": "HF radio, 150 W vehicular amplifier (reach-back)",
+   "priority": 2,
+   "channel": 4,
+   "basis": "sourced",
+   "src": [
+    "HFPA"
+   ],
+   "sw_avg_w": 66.0,
+   "sw_peak_w": 560,
+   "drive_avg_w": 50.4
+  },
+  {
+   "id": "SATC2",
+   "name": "Satellite C2 / position-reporting terminal",
+   "priority": 2,
+   "channel": 5,
+   "basis": "sourced",
+   "src": [
+    "CERDEC2007"
+   ],
+   "sw_avg_w": 90.58,
+   "sw_peak_w": 560,
+   "drive_avg_w": 90.58
+  },
+  {
+   "id": "CORE-SW",
+   "name": "Network switch",
+   "priority": 1,
+   "channel": 6,
+   "basis": "sourced",
+   "src": [
+    "SWITCH"
+   ],
+   "sw_avg_w": 20,
+   "sw_peak_w": 20,
+   "drive_avg_w": 20
+  },
+  {
+   "id": "CORE-INS",
+   "name": "Inertial navigation unit (FOG INS / GNSS)",
+   "priority": 1,
+   "channel": 6,
+   "basis": "sourced",
+   "src": [
+    "INS"
+   ],
+   "sw_avg_w": 15,
+   "sw_peak_w": 15,
+   "drive_avg_w": 15
+  },
+  {
+   "id": "CORE-IC",
+   "name": "Crew intercom master station and boxes",
+   "priority": 1,
+   "channel": 6,
+   "basis": "assumed",
+   "src": [],
+   "sw_avg_w": 40,
+   "sw_peak_w": 40,
+   "drive_avg_w": 40
+  },
+  {
+   "id": "MC1",
+   "name": "Commander's mission computer + 15.6 inch display (battle management)",
+   "priority": 1,
+   "channel": 7,
+   "basis": "derived",
+   "src": [
+    "MCOMP",
+    "DISPLAY"
+   ],
+   "sw_avg_w": 150,
+   "sw_peak_w": 150,
+   "drive_avg_w": 150
+  },
+  {
+   "id": "MC2",
+   "name": "Operations officer's mission computer + display",
+   "priority": 2,
+   "channel": 8,
+   "basis": "derived",
+   "src": [
+    "MCOMP",
+    "DISPLAY"
+   ],
+   "sw_avg_w": 150,
+   "sw_peak_w": 150,
+   "drive_avg_w": 150
+  },
+  {
+   "id": "WS34",
+   "name": "Staff workstations 3 and 4 (computer + display each)",
+   "priority": 3,
+   "channel": 9,
+   "basis": "derived",
+   "src": [
+    "MCOMP",
+    "DISPLAY"
+   ],
+   "sw_avg_w": 300,
+   "sw_peak_w": 300,
+   "drive_avg_w": 0
+  },
+  {
+   "id": "MAST",
+   "name": "Mast-mounted EO/IR surveillance camera",
+   "priority": 3,
+   "channel": 10,
+   "basis": "sourced",
+   "src": [
+    "CERDEC2007"
+   ],
+   "sw_avg_w": 180.6,
+   "sw_peak_w": 420,
+   "drive_avg_w": 0
+  },
+  {
+   "id": "HCLOS",
+   "name": "High-capacity line-of-sight data link",
+   "priority": 3,
+   "channel": 11,
+   "basis": "sourced",
+   "src": [
+    "HCLOS"
+   ],
+   "sw_avg_w": 100,
+   "sw_peak_w": 100,
+   "drive_avg_w": 0
+  },
+  {
+   "id": "RWS",
+   "name": "Remote weapon station",
+   "priority": 2,
+   "channel": 12,
+   "basis": "sourced",
+   "src": [
+    "CERDEC2007"
+   ],
+   "sw_avg_w": 112.0,
+   "sw_peak_w": 112,
+   "drive_avg_w": 504.0
+  },
+  {
+   "id": "CBRN",
+   "name": "CBRN filtration / ventilation unit (overpressure)",
+   "priority": 2,
+   "channel": 13,
+   "basis": "derived",
+   "src": [
+    "CBRN"
+   ],
+   "sw_avg_w": 150,
+   "sw_peak_w": 150,
+   "drive_avg_w": 150
+  },
+  {
+   "id": "ECU",
+   "name": "Environmental control unit (mission compartment cooling); draw computed by the thermal model",
+   "priority": 2,
+   "channel": 14,
+   "basis": "derived",
+   "src": [
+    "MIL810H"
+   ],
+   "sw_avg_w": 0,
+   "sw_peak_w": 0,
+   "drive_avg_w": 0
+  },
+  {
+   "id": "INV",
+   "name": "230 V AC inverter outlets (staff laptops, printer)",
+   "priority": 4,
+   "channel": 15,
+   "basis": "assumed",
+   "src": [],
+   "sw_avg_w": 300,
+   "sw_peak_w": 300,
+   "drive_avg_w": 300
+  },
+  {
+   "id": "CABIN",
+   "name": "Cabin lighting (LED) and heater fan / fuel pump",
+   "priority": 4,
+   "channel": 16,
+   "basis": "assumed",
+   "src": [],
+   "sw_avg_w": 40,
+   "sw_peak_w": 40,
+   "drive_avg_w": 40
+  }
+ ],
+ "equipment_heat_w": 1664.7465,
+ "thermal": {
+  "A1_hot_dry": {
+   "t_amb": 49.0,
+   "g_solar": 730.0,
+   "t_uncooled": 72.415943,
+   "q_cool_w": 3900.9465,
+   "ecu_w": 2675.025691,
+   "hours_to_limit_no_cooling": 0.083896
+  },
+  "A2_basic_hot": {
+   "t_amb": 43.0,
+   "g_solar": 1120.0,
+   "t_uncooled": 68.104603,
+   "q_cool_w": 3482.7465,
+   "ecu_w": 2132.565676,
+   "hours_to_limit_no_cooling": 0.09334
+  },
+  "temperate": {
+   "t_amb": 25.0,
+   "g_solar": 0.0,
+   "t_uncooled": 45.255119,
+   "q_cool_w": 1266.3465,
+   "ecu_w": 737.056346,
+   "hours_to_limit_no_cooling": 0.232137
+  },
+  "C1_basic_cold": {
+   "t_amb": -32.0,
+   "g_solar": 0.0,
+   "t_uncooled": -11.744881,
+   "q_cool_w": 0.0,
+   "ecu_w": 0.0,
+   "hours_to_limit_no_cooling": "inf"
+  },
+  "C2_cold": {
+   "t_amb": -46.0,
+   "g_solar": 0.0,
+   "t_uncooled": -25.744881,
+   "q_cool_w": 0.0,
+   "ecu_w": 0.0,
+   "hours_to_limit_no_cooling": "inf"
+  }
+ }
+}

@@ -1,0 +1,62 @@
+# Operating environment and the mission-compartment thermal zone (DOSSIER 3.3, 8.6).
+# basis: sourced = value read in the cited document; derived = computed from sourced values;
+# assumed = engineering assumption, listed in DOSSIER 14 (limits) and swept in the sensitivity runs.
+
+climates:
+  # MIL-STD-810H Part One / Part Three, Annex C: climatic categories (AR 70-38, AECTP 230 / STANAG 4370)
+  A1_hot_dry:
+    t_amb: 49.0          # degC, A1 peak air temperature (810H 505.7 para 4.4.2 a / Part Three)
+    g_solar: 730.0       # W/m2 at the hour of the 49 degC air peak (16 h LST) in the hot-dry cycle [MILHDBK310];
+                         # 1120 W/m2 occurs at 12-13 h with air at 44-47 degC (810H: the peaks do not coincide)
+    idle_rpm: 700
+    basis: sourced
+    src: [MIL810H, MILHDBK310]
+  A2_basic_hot:
+    t_amb: 43.0
+    g_solar: 1120.0
+    idle_rpm: 700
+    basis: sourced
+    src: [MIL810H]
+  temperate:
+    t_amb: 25.0
+    g_solar: 0.0         # night silent watch
+    idle_rpm: 700
+    basis: assumed
+  C1_basic_cold:
+    t_amb: -32.0         # 810H Part Three: Basic category cold extreme
+    g_solar: 0.0
+    idle_rpm: 700
+    basis: sourced
+    src: [MIL810H]
+  C2_cold:
+    t_amb: -46.0         # 810H Part Three: Cold category extreme
+    g_solar: 0.0
+    idle_rpm: 700
+    basis: sourced
+    src: [MIL810H]
+
+zone:
+  # Mission compartment holding the equipment racks and 4 operators. Shell: armour steel with a
+  # spall liner / insulation layer. Geometry assumed: 3.5 m x 2.3 m x 1.6 m inside.
+  # roof 8.0 m2, walls + floor 18.6 m2, U = 1.5 W/m2K (25 mm liner, k ~ 0.04 W/mK, plus films).
+  ua_roof: 12.0          # W/K   (8.0 m2 x 1.5)        basis: assumed
+  ua_wall: 28.0          # W/K   (18.6 m2 x 1.5)       basis: assumed
+  ua_vent: 57.0          # W/K   derived: 170 m3/h filtered fresh air [CBRN] x 1.2 kg/m3 x 1005 J/kgK / 3600
+  alpha_roof: 0.7        # solar absorptivity of matt camouflage paint, basis: assumed
+  h_out: 20.0            # W/m2K outside film with light wind, basis: assumed
+  c_zone_j_per_k: 250000.0  # air (~13 m3) + racks + equipment, basis: assumed
+  crew: 4
+  crew_sensible_w: 75.0  # W sensible per seated operator, light work; basis: sourced (ASHRAE Fundamentals ch. 18 Table 1, not re-checked online)
+  t_limit_c: 32.2       # interior air below 90 degF at 110 degF ambient and 1120 W/m2 sun: the published requirement
+                         # of a crewed amphibious combat vehicle [ACVP-HVAC]; MIL-STD-1472H sets a 21-25 degC HVAC design
+                         # goal and WBGTeff <= 30 degC in manned spaces [MIL1472H]
+  ecu_q_rated_w: 6000.0  # rated cooling; vehicle air-handling units of 6.3 kW net cooling are published [ECU-OVR]
+  ecu_cop:               # COP vs ambient: 1.5 at 125/90 degF (51.7 degC out, 32.2 degC in) for a military 5-ton ECU
+                         # [ECU-5T]; electric-compressor vehicle units give derived COP 1.4-2.0 [ECU-OVR]; the points
+                         # below 52 degC are an ASSUMED rising curve through the sourced point
+    - [25.0, 2.6]
+    - [43.0, 1.85]
+    - [51.7, 1.5]
+  ecu_fan_w: 250.0
+  basis: assumed
+  src: [CBRN, ASHRAE, ECU-OVR, ECU-5T, ACVP-HVAC, MIL1472H]

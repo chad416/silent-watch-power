@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Lint (ruff)
+        run: ruff check swpower tools tests
+
+      - name: Data checks (sources resolve, battery R0 derivation is current)
+        run: |
+          python -c "from swpower import data; bad = data.check_sources(); print(bad); assert not bad"
+          python tools/derive_battery_params.py --check
+
+      - name: Traceability and results tables are current
+        run: |
+          python tools/traceability.py --check
+          python tools/results_md.py --check
+
+      - name: Unit and integration tests (ST controller runs through the translator)
+        run: python -m pytest -v
+
+      - name: SCL export is current
+        run: |
+          python -m swpower scl --out build/FB_PowerMgmt.scl
+          cmp build/FB_PowerMgmt.scl plc/FB_PowerMgmt.scl
+          python -c "from pathlib import Path; from swpower.scl import export; export(Path('plc/FB_ArcDetect.st'), Path('build/FB_ArcDetect.scl'))"
+          cmp build/FB_ArcDetect.scl plc/FB_ArcDetect.scl
+
+      - name: Demo runs
+        run: |
+          python -m swpower budget
+          python -m swpower validate
+          python -m swpower watch --arch A2_split_li --np 10 --climate A2_basic_hot --hours 8 --dt 20

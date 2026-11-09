@@ -1,0 +1,260 @@
+# Load inventory of the reference command-post C4ISR suite (DOSSIER 7.1).
+# One SSPC channel may feed several loads. States are W per unit at 28 V DC input.
+# priority: 1 vital (never shed by the controller), 2 essential, 3 deferrable, 4 comfort.
+# maturity sets the growth allowance (cots / modified / new).
+# Duty cycles are ASSUMED unless stated (DOSSIER 7.2 explains them; the sensitivity runs sweep the
+# transmit duty). Modes: drive, halt, silent_watch, cold_start.
+
+growth_allowance:      # fraction added to the current best estimate, by maturity (ASSUMED; Wasson ch. 31
+  cots: 0.05           # gives the margin principle, not the values; values follow common practice of
+  modified: 0.15       # larger allowances for less mature items)
+  new: 0.25
+system_margin: 0.10    # held by the power-system owner, not allocated (Wasson Fig. 31.1 uses 10 %)
+
+loads:
+  - id: VHF1
+    name: VHF combat net radio 1 (command net), 50 W vehicular amplifier
+    qty: 1
+    priority: 1
+    channel: 1
+    maturity: cots
+    in_bay: true
+    states: {off: 0, rx: 65, tx: 450}       # [VHFPA] Rx 65 W max, Tx 450 W max
+    rf_out_w: {tx: 50}
+    duty:
+      drive: {rx: 0.90, tx: 0.10}
+      halt: {rx: 0.90, tx: 0.10}
+      silent_watch: {rx: 0.90, tx: 0.10}    # 10 % transmit on the command net, ASSUMED (swept 5-25 %)
+      cold_start: {off: 1.0}
+    basis: sourced
+    src: [VHFPA, CERDEC2007]
+    note: cross-check, a dual 50 W set draws 1.4 A receive and 13.9 A dual transmit at 28 V [CERDEC2007]
+
+  - id: VHF2
+    name: VHF combat net radio 2 (second net), 50 W vehicular amplifier
+    qty: 1
+    priority: 2
+    channel: 2
+    maturity: cots
+    in_bay: true
+    states: {off: 0, rx: 65, tx: 450}
+    rf_out_w: {tx: 50}
+    duty:
+      drive: {rx: 0.95, tx: 0.05}
+      halt: {rx: 0.95, tx: 0.05}
+      silent_watch: {rx: 0.95, tx: 0.05}
+      cold_start: {off: 1.0}
+    basis: sourced
+    src: [VHFPA]
+
+  - id: WB
+    name: Wideband multiband radio (UHF SATCOM / MANET) in a 50 W vehicular amplifier adapter
+    qty: 1
+    priority: 2
+    channel: 3
+    maturity: cots
+    in_bay: true
+    states: {off: 0, rx: 80, tx: 210}       # radio 65 W max [WBRADIO]; adapter DC input not published:
+    rf_out_w: {tx: 50}                      # tx = 65 + 50 W RF / 0.35 PA efficiency, rx = 65 + 15 W idle (DERIVED)
+    duty:
+      drive: {rx: 0.95, tx: 0.05}
+      halt: {rx: 0.95, tx: 0.05}
+      silent_watch: {rx: 0.95, tx: 0.05}
+      cold_start: {off: 1.0}
+    basis: derived
+    src: [WBRADIO]
+
+  - id: HF
+    name: HF radio, 150 W vehicular amplifier (reach-back)
+    qty: 1
+    priority: 2
+    channel: 4
+    maturity: cots
+    in_bay: true
+    states: {off: 0, rx: 40, tx: 560}       # Tx 28 V x 20 A max [HFPA]; rx 40 W ASSUMED
+    rf_out_w: {tx: 150}
+    duty:
+      drive: {rx: 0.98, tx: 0.02}
+      halt: {rx: 0.95, tx: 0.05}
+      silent_watch: {rx: 0.95, tx: 0.05}
+      cold_start: {off: 1.0}
+    basis: sourced
+    src: [HFPA]
+
+  - id: SATC2
+    name: Satellite C2 / position-reporting terminal
+    qty: 1
+    priority: 2
+    channel: 5
+    maturity: cots
+    in_bay: true
+    states: {standby: 14, nominal: 81, peak: 560}   # 0.5 / 2.9 / 20 A at 28 V [CERDEC2007]
+    duty:
+      drive: {nominal: 0.98, peak: 0.02}
+      halt: {nominal: 0.98, peak: 0.02}
+      silent_watch: {nominal: 0.98, peak: 0.02}
+      cold_start: {standby: 1.0}
+    basis: sourced
+    src: [CERDEC2007]
+
+  - id: CORE-SW
+    name: Network switch
+    qty: 1
+    priority: 1
+    channel: 6
+    maturity: cots
+    in_bay: true
+    states: {on: 20}                        # < 20 W at 28 V [SWITCH]
+    duty: {drive: {on: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {on: 1}}
+    basis: sourced
+    src: [SWITCH]
+  - id: CORE-INS
+    name: Inertial navigation unit (FOG INS / GNSS)
+    qty: 1
+    priority: 1
+    channel: 6
+    maturity: cots
+    in_bay: true
+    states: {on: 15}                        # 15 W [INS]
+    duty: {drive: {on: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {on: 1}}
+    basis: sourced
+    src: [INS]
+  - id: CORE-IC
+    name: Crew intercom master station and boxes
+    qty: 1
+    priority: 1
+    channel: 6
+    maturity: cots
+    in_bay: true
+    states: {on: 40}                        # no published draw found; ASSUMED (1 A fuse on a 24 V station)
+    duty: {drive: {on: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {on: 1}}
+    basis: assumed
+
+  - id: MC1
+    name: Commander's mission computer + 15.6 inch display (battle management)
+    qty: 1
+    priority: 1
+    channel: 7
+    maturity: modified
+    in_bay: true
+    states: {off: 0, on: 150}               # computer 100 W (45-150 W typical [MCOMP]) + display 50 W [DISPLAY]
+    duty: {drive: {on: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {off: 1}}
+    basis: derived
+    src: [MCOMP, DISPLAY]
+  - id: MC2
+    name: Operations officer's mission computer + display
+    qty: 1
+    priority: 2
+    channel: 8
+    maturity: modified
+    in_bay: true
+    states: {off: 0, on: 150}
+    duty: {drive: {on: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {off: 1}}
+    basis: derived
+    src: [MCOMP, DISPLAY]
+  - id: WS34
+    name: Staff workstations 3 and 4 (computer + display each)
+    qty: 2
+    priority: 3
+    channel: 9
+    maturity: modified
+    in_bay: true
+    states: {off: 0, on: 150}
+    duty: {drive: {off: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {off: 1}}
+    basis: derived
+    src: [MCOMP, DISPLAY]
+
+  - id: MAST
+    name: Mast-mounted EO/IR surveillance camera
+    qty: 1
+    priority: 3
+    channel: 10
+    maturity: cots
+    in_bay: false
+    states: {off: 0, nominal: 168, peak: 420}   # 0 / 6 / 15 A at 28 V [CERDEC2007]
+    duty:
+      drive: {off: 1}
+      halt: {nominal: 0.95, peak: 0.05}
+      silent_watch: {nominal: 0.95, peak: 0.05}
+      cold_start: {off: 1}
+    basis: sourced
+    src: [CERDEC2007]
+
+  - id: HCLOS
+    name: High-capacity line-of-sight data link
+    qty: 1
+    priority: 3
+    channel: 11
+    maturity: cots
+    in_bay: true
+    states: {off: 0, on: 100, max: 130}     # 130 W max with amplifier [HCLOS]; 100 W average ASSUMED
+    duty: {drive: {off: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {off: 1}}
+    basis: sourced
+    src: [HCLOS]
+
+  - id: RWS
+    name: Remote weapon station
+    qty: 1
+    priority: 2
+    channel: 12
+    maturity: cots
+    in_bay: false
+    states: {standby: 112, nominal: 504, peak: 1008}   # 4 / 18 / 36 A at 28 V [CERDEC2007]
+    duty:
+      drive: {nominal: 1.0}
+      halt: {standby: 1.0}
+      silent_watch: {standby: 1.0}
+      cold_start: {standby: 1.0}
+    basis: sourced
+    src: [CERDEC2007]
+
+  - id: CBRN
+    name: CBRN filtration / ventilation unit (overpressure)
+    qty: 1
+    priority: 2
+    channel: 13
+    maturity: cots
+    in_bay: false
+    states: {off: 0, vent: 150, filter: 300}  # fan 510 W max at 120 V AC [CBRN]; 170 m3/h at 1.75 kPa = 82 W air
+    duty:                                     # power, 35-45 % fan + inverter efficiency -> 180-235 W (DERIVED);
+      drive: {vent: 1}                        # 300 W in full filter mode incl. inverter, 150 W low-speed vent
+      halt: {vent: 1}
+      silent_watch: {vent: 1}
+      cold_start: {off: 1}
+    basis: derived
+    src: [CBRN]
+
+  - id: ECU
+    name: Environmental control unit (mission compartment cooling); draw computed by the thermal model
+    qty: 1
+    priority: 2                             # essential: without it the compartment passes 40 degC in hot climates
+    channel: 14
+    maturity: cots
+    in_bay: false
+    states: {ctrl: 0}
+    duty: {drive: {ctrl: 1}, halt: {ctrl: 1}, silent_watch: {ctrl: 1}, cold_start: {ctrl: 1}}
+    basis: derived
+    src: [MIL810H]
+    note: electrical draw = Q_cool / COP + fans from swpower.thermal (DOSSIER 8.6)
+
+  - id: INV
+    name: 230 V AC inverter outlets (staff laptops, printer)
+    qty: 1
+    priority: 4
+    channel: 15
+    maturity: cots
+    in_bay: true
+    states: {off: 0, on: 300}               # ASSUMED (4 laptops x 60 W + printer average, inverter losses)
+    duty: {drive: {on: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {off: 1}}
+    basis: assumed
+
+  - id: CABIN
+    name: Cabin lighting (LED) and heater fan / fuel pump
+    qty: 1
+    priority: 4
+    channel: 16
+    maturity: cots
+    in_bay: true
+    states: {off: 0, on: 40}                # lights ASSUMED; heater electrics added in cold climates by the model
+    duty: {drive: {on: 1}, halt: {on: 1}, silent_watch: {on: 1}, cold_start: {on: 1}}
+    basis: assumed

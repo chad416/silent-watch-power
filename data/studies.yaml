@@ -1,0 +1,92 @@
+# Inputs of the trade study, the SSPC/wire study and the RMA study (DOSSIER 9.3, 11, 12).
+
+kpp:
+  # KPP-1 silent-watch endurance, essential suite (priority 1-2 incl. cooling), engine and APU off,
+  # start reserve kept, over the Basic climatic category design range (MIL-STD-810H Annex C D.1:
+  # -32 to +43 degC). Threshold from [GVSC2022] (4 h mission target for a wheeled vehicle), objective
+  # from [APU12H] (12 h continuous silent watch).
+  threshold_h: 4.0
+  objective_h: 12.0
+  design_climates: [A2_basic_hot, C1_basic_cold]
+  extreme_climates: [A1_hot_dry, C2_cold]
+
+sizing:
+  A1_split_agm: [2, 4, 6, 8, 10, 12]
+  A2_split_li: [2, 4, 6, 8, 10, 12]
+
+alternatives:
+  # each alternative: architecture, mission-bank strings, APU; sized in DOSSIER 10.3 (10 Li-ion blocks: 9 is the bare minimum at +43 degC)
+  A0: {arch: A0_common_agm, np: 2, apu: "", label: "Baseline: 4 x 6T AGM common bank"}
+  A1: {arch: A1_split_agm, np: 10, apu: "", label: "Split banks, 20 x 6T AGM mission bank"}
+  A2: {arch: A2_split_li, np: 10, apu: "", label: "Split banks, 10 x Li-ion 6T mission bank"}
+  A3: {arch: A3_split_agm_apu, np: 2, apu: apu5, label: "Split banks, 4 x 6T AGM + 5 kW APU"}
+  A4: {arch: A4_common_agm_idle, np: 2, apu: engine_idle, label: "Baseline bank + engine auto-idle"}
+  A5: {arch: A5_split_li_apu, np: 10, apu: apu5, label: "Split banks, 10 x Li-ion 6T + 5 kW APU"}
+
+baseline_storage: {blocks: 4, block: agm_6t}   # what every alternative's added mass/volume/cost is measured against
+
+criteria:
+  # rating = importance 1..10 (auto-normalised weights, Wasson 32.5.12); shape inc/dec/s
+  - {id: sw_hot, name: "Silent essential endurance at +43 degC", unit: h, rating: 10, shape: s, worst: 0, best: 12, threshold: 4}
+  - {id: sw_cold, name: "Silent essential endurance at -32 degC", unit: h, rating: 9, shape: s, worst: 0, best: 12, threshold: 4}
+  - {id: watch12_dba, name: "Loudest charging source during a 12 h watch (dB(A) at 7 m)", unit: dBA, rating: 7, shape: dec, worst: 75, best: 35}
+  - {id: watch12_fuel, name: "Fuel for a 12 h watch at +43 degC", unit: L, rating: 3, shape: dec, worst: 40, best: 0}
+  - {id: added_mass, name: "Added mass over the baseline bank", unit: kg, rating: 6, shape: dec, worst: 1000, best: 0}
+  - {id: added_volume, name: "Added volume over the baseline bank", unit: L, rating: 4, shape: dec, worst: 600, best: 0}
+  - {id: added_cost, name: "Added acquisition cost (indicative)", unit: kEUR, rating: 4, shape: dec, worst: 150, best: 0}
+  - {id: r_watch, name: "Power-system reliability over a 12 h watch", unit: "-", rating: 6, shape: inc, worst: 0.95, best: 0.999}
+  - {id: watch12_ess, name: "Essential suite kept for a 12 h watch at +43 degC (any source)", unit: h, rating: 8, shape: s, worst: 0, best: 12}
+
+background_dba: 35.0      # acoustic floor used for a battery-only watch (no charging source), ASSUMED
+
+sspc:
+  # trip-curve form from [SSPC-6136] (no trip <= 115 %, trip >= 145 %; instant trip 400-700 % in ~250 us);
+  # ratings 0-50 V DC, I2t with memory, ~1 ms clearing [SSPC-DDC]. t_ref is ASSUMED (2x I_n in 3 s).
+  k_nt: 1.15
+  m_ref: 2.0
+  t_ref: 3.0
+  k_inst: 6.0
+  t_inst: 0.00025
+  ratings: [5.0, 7.5, 10.0, 15.0, 20.0, 25.0, 35.0, 50.0, 75.0, 100.0, 150.0, 200.0, 300.0]   # PDU channels to 300 A [SSPC-DDC]
+  rating_factor: 1.25        # channel rating >= 1.25 x the steady peak current at 20 V
+wire:
+  # first-principles ampacity of a single insulated copper conductor in a bundle (DOSSIER 9.3):
+  # I_ss^2 R'(T_max) = h * pi * d_ins * (T_max - T_a); XLPE-class insulation, k = 143 [IEC60364]
+  t_max_c: 150.0             # conductor limit for 150 degC-rated wire, ASSUMED class
+  t_amb_c: 70.0              # hottest wiring ambient in the bay or engine side, ASSUMED
+  h_w_m2k: 8.0               # natural convection + radiation in a bundle, conservative, ASSUMED
+  k_adiabatic: 143.0
+  sizes:                     # csa mm2 : insulated diameter mm (typical thin-wall)
+    - [0.75, 1.6]
+    - [1.0, 1.8]
+    - [1.5, 2.1]
+    - [2.5, 2.6]
+    - [4.0, 3.2]
+    - [6.0, 3.8]
+    - [10.0, 5.0]
+    - [16.0, 6.2]
+    - [25.0, 7.6]
+    - [35.0, 8.8]
+    - [50.0, 10.4]
+    - [70.0, 12.2]
+    - [95.0, 14.2]
+    - [120.0, 15.8]
+  run_m: 5.0                 # one-way channel run length, ASSUMED
+
+rbd:
+  # failure rates in failures per 10^6 h; ASSUMED order-of-magnitude values unless sourced, swept x0.5..x3
+  # in the sensitivity run. mcmt_h = mean corrective maintenance time per failure.
+  ldt_h: 24.0                # logistics delay, ASSUMED
+  adt_h: 4.0                 # administrative delay, ASSUMED
+  blocks:
+    agm_block: {name: "6T AGM block", fpmh: 10.0, mcmt_h: 0.5}
+    li_block: {name: "Li-ion 6T block incl. BMS", fpmh: 20.0, mcmt_h: 0.5}
+    combiner: {name: "Combiner relay (VSR)", fpmh: 10.0, mcmt_h: 1.0}
+    main_contactor: {name: "Mission bus main contactor", fpmh: 10.0, mcmt_h: 1.0}
+    monitor: {name: "Battery monitor / shunt", fpmh: 5.0, mcmt_h: 0.5}
+    pmc: {name: "Power-management controller (FB_PowerMgmt host)", fpmh: 15.0, mcmt_h: 1.0}
+    sspc_ch: {name: "SSPC channel (each)", fpmh: 2.0, mcmt_h: 1.0}
+    busbar: {name: "Bus bars, harness, connectors", fpmh: 5.0, mcmt_h: 2.0}
+    ecu: {name: "Environmental control unit", fpmh: 500.0, mcmt_h: 3.0}
+    apu: {name: "5 kW APU", fpmh: 824.0, mcmt_h: 4.0, src: [APU-BRIEF09]}   # 1/1213 h [APU-BRIEF09]
+    alternator: {name: "Alternator + regulator", fpmh: 200.0, mcmt_h: 3.0}
