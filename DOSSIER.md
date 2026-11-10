@@ -12,7 +12,7 @@ Wasson (2016) is cited as [W ch.x, p.N] with the printed page.
 
 ## 0. The question and the answer
 
-**Central question.** What 28 V power architecture lets a 4x4/6x6 command variant run its C4ISR suite on silent watch for N hours, survive MIL-STD-1275E transients, keep its engine-start reserve and stay inside the mission-compartment thermal limit?
+**Central question.** What 28 V power architecture lets a 4x4/6x6 command variant run its C4ISR suite on silent watch for N hours, survive MIL-STD-1275F (and 1275E) transients, keep its engine-start reserve and stay inside the mission-compartment thermal limit?
 
 **N.** The threshold is **4 h** and the objective **12 h** of the essential suite with the engine and any APU off. The threshold comes from a 2022 Army briefing that sets a 4 h silent-watch mission target for a wheeled combat vehicle [GVSC2022]. The objective comes from a 2021 tank APU sources-sought notice that asks for 12 h of continuous silent watch [APU12H]. Both are argued in section 5.1.
 
@@ -67,9 +67,9 @@ The C4ISR equipment, the engine and the vehicle structure are external systems. 
 **Method.** The dossier follows Wasson's sequence. User needs and mission analysis come first (ch. 4-5), then the ConOps (ch. 6) and the phases, modes and states (ch. 7). Requirements derived from standards follow (ch. 19-22), then architecture and interfaces (ch. 26-27), budgets and margins (ch. 31), the trade study (ch. 32), modelling and simulation (ch. 33), reliability (ch. 34) and verification and validation (ch. 13, 28). The INCOSE handbook [INCOSE2015] and the NASA SE handbook [NASA2016] are used for process context only.
 
 **What was built.**
-- A time-domain model of the EPS: batteries, alternator, APU, the bus, loads, the thermal zone, the engine start, MIL-STD-1275E transients and SSPC/wire protection. It is in Python under `swpower/`.
+- A time-domain model of the EPS: batteries, alternator, APU, the bus, loads, the thermal zone, the engine start, MIL-STD-1275E and 1275F transients and SSPC/wire protection. It is in Python under `swpower/`.
 - The load-management controller as an IEC 61131-3 Structured Text function block (`plc/FB_PowerMgmt.st`). It runs unchanged inside every simulation through a small ST-to-Python translator, and is exported as Siemens SCL.
-- 48 tests, CI configuration, and the figures in `docs/img`.
+- 51 tests, CI configuration, and the figures in `docs/img`.
 
 ---
 
@@ -858,7 +858,7 @@ Validation asks whether this is the right system for the user, as distinct from 
 
 **Why it matters to a company that integrates command variants.** An integrator that designs the electronics bay, the system integration and the power distribution of a command variant owns exactly these trades. This work does not replace the integrator's own design data. It shows:
 - **the method:** needs, ConOps, modes, requirements from standards, budgets, trades, M&S with stated credibility, FMEA and RBD, V&V;
-- **the physics:** battery temperature behaviour, the thermal-electrical coupling, 1275E transients, protection coordination;
+- **the physics:** battery temperature behaviour, the thermal-electrical coupling, 1275E/F transients, protection coordination;
 - **a working controller in IEC 61131-3,** tested and exportable to a PLC.
 
 The concrete next step a placement or thesis could take is the bench in section 13: a real Li-ion 6T, an AGM pair, an SSPC card and a programmable 1275E source, running `FB_PowerMgmt` on a soft PLC. It would validate the battery and transient models against hardware.
@@ -947,7 +947,7 @@ Keys are used in the text and in data/*.yaml. Web sources accessed 9 Nov 2026. V
 - **[MIL882E]** MIL-STD-882E, Standard Practice: System Safety, 11 May 2012, Tables I-III. https://everyspec.com/MIL-STD/MIL-STD-0800-0899/MIL-STD-882E_41682/
 - **[MIL338B]** MIL-HDBK-338B, Electronic Reliability Design Handbook, 1 Oct 1998, section 10.4.1.1. https://everyspec.com/MIL-HDBK/MIL-HDBK-0300-0499/MIL-HDBK-338B_15041/
 - **[MIL32143C]** MIL-PRF-32143C, Batteries, Storage: Automotive, Valve Regulated Lead Acid (VRLA), 9 Feb 2016, Table I. https://everyspec.com/MIL-PRF/MIL-PRF-030000-79999/MIL-PRF-32143C_53904/
-- **[MIL32565]** MIL-PRF-32565, Battery, Rechargeable, Sealed, 6T Lithium-Ion, 17 Nov 2016 (base revision; Rev C 2021 is current and was not read), Table I and 3.3.5.2.3. https://everyspec.com/MIL-PRF/MIL-PRF-030000-79999/MIL-PRF-32565_55575/
+- **[MIL32565]** MIL-PRF-32565, Battery, Rechargeable, Sealed, 6T Lithium-Ion, 17 Nov 2016 (base revision; superseded by Rev C w/Amendment 2, which was read and is cited as [MIL32565C] below), Table I and 3.3.5.2.3. https://everyspec.com/MIL-PRF/MIL-PRF-030000-79999/MIL-PRF-32565_55575/
 - **[MILDTL62186]** MIL-DTL-62186C, Generator, AC (650 Ampere Rectified), 28 Volts DC (Oil Cooled), 3.4.4-3.4.11. https://generatorsgeneratorsetselectrical.emilspec.com/MIL-DTL-62186/page4.html
 - **[MILP81653]** MIL-P-81653B, Power Controller, Solid State, General Specification For, 14 Feb 1980 (aircraft-scoped; scanned, limits not extracted). https://everyspec.com/MIL-SPECS/MIL-SPECS-MIL-P/MIL-P-81653B_24455/
 - **[MIL32565C]** MIL-PRF-32565C w/Amendment 2, Battery, Rechargeable, Sealed, 6T Lithium-Ion, 4 Aug 2022 (current; read from DLA ASSIST: 1.2, 3.3.5.2.3, 3.5.3, 3.5.5, 3.7.3.1 Fig. 10, Table I). https://quicksearch.dla.mil/
